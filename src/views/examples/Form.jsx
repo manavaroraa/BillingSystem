@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import Header from "../../Components/Header/Header";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import {
-  Button
-} from "reactstrap";
+import { Button } from "reactstrap";
 import "react-datetime/css/react-datetime.css";
 import TextField from "@material-ui/core/TextField";
 
@@ -42,14 +40,16 @@ class Form extends Component {
       InvoiceLink: null,
       Amount: null,
       email: null,
-      ClientType: "Other",
+      ClientType: "",
       date: "",
+      status: "",
       formErrors: {
         InvoiceLink: "",
         Amount: "",
         email: "",
         ClientType: "",
         date: "",
+        status: "",
       },
     };
     this.handleChange = this.handleChange.bind(this);
@@ -66,6 +66,7 @@ class Form extends Component {
         Email: ${this.state.email}
         Client Type: ${this.state.ClientType}
         Date: ${this.state.date}
+        status:${this.state.status}
       `);
     } else {
       console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
@@ -76,8 +77,9 @@ class Form extends Component {
       email: this.state.email,
       ClientType: this.state.ClientType,
       date: this.state.date,
+      status: this.state.status,
     };
-    axios.post(`http://localhost:3001/api/insert`, user).then((res) => {
+    axios.post(`http://localhost:3001/signup`, user).then((res) => {
       console.log(res);
       console.log(res.data);
     });
@@ -96,6 +98,8 @@ class Form extends Component {
         break;
       case "ClientType":
         break;
+      case "status":
+        break;
       case "date":
         formErrors.date = date_regex.test(value) ? "" : "Enter Date";
         break;
@@ -110,10 +114,8 @@ class Form extends Component {
     this.setState({ formErrors, [name]: value }, () => console.log(this.state));
   };
 
- 
   render() {
     const { formErrors } = this.state;
-
 
     return (
       <>
@@ -125,38 +127,6 @@ class Form extends Component {
           <div className="form-wrapper">
             <h1>Add new invoice</h1>
             <form onSubmit={this.handleSubmit} noValidate>
-              <div>
-                <label htmlFor="ClientType">Client Type</label>
-                <br />
-                Dev
-                <input
-                  id="Dev"
-                  value="Dev"
-                  type="radio"
-                  onChange={this.handleChange}
-                  name="ClientType"
-                />
-                &nbsp; SEO
-                <input
-                  id="SEO"
-                  value="SEO"
-                  type="radio"
-                  onChange={this.handleChange}
-                  name="ClientType"
-                />
-                &nbsp; Other
-                <input
-                  id="Other"
-                  value="Other"
-                  type="radio"
-                  name="ClientType"
-                  defaultChecked
-                  onChange={this.handleChange}
-                />
-              </div>
-              <br />
-              <br />
-              &nbsp;&nbsp;
               <div className="InvoiceLink">
                 <label htmlFor="InvoiceLink">Invoice Link</label>
                 <input
@@ -206,8 +176,8 @@ class Form extends Component {
                 )}
               </div>
               <div>
-              <label>Date</label> <br/>
-              &nbsp;
+                <label>Date</label> <br />
+                &nbsp;
                 <TextField
                   id="date"
                   type="date"
@@ -218,6 +188,37 @@ class Form extends Component {
                   }}
                 />
               </div>
+              <br />
+              <br />
+              &nbsp;&nbsp;
+        
+              <div >
+              <label htmlFor="">Status</label>
+              <br />
+                <select name="status" Value={this.state.status} 
+                onChange={this.handleChange}>
+                    <option  value="">Select</option>
+                  <option id="1"  value="1">No paid</option>
+                  <option id="2"  value="2">Paid</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="ClientType">Client Type</label>
+                <br />
+                <div >
+              <br />
+                <select name="ClientType" Value={this.state.ClientType} 
+                onChange={this.handleChange}>
+                    <option  value="">Select</option>
+                  <option  value="Dev">Dev</option>
+                  <option  value="SEO">SEO</option>
+                  <option  value="Other">Other</option>
+                </select>
+              </div>
+              </div>
+              <br />
+              <br />
+              &nbsp;&nbsp;
               <div className="createAccount">
                 <Button
                   type="submit"
@@ -225,7 +226,13 @@ class Form extends Component {
                   fullWidth
                   variant="contained"
                   color="primary"
-                  disabled={!(this.state.email && this.state.InvoiceLink && this.state.Amount)}
+                  disabled={
+                    !(
+                      this.state.email &&
+                      this.state.InvoiceLink &&
+                      this.state.Amount && this.state.status && this.state.ClientType
+                    )
+                  }
                 >
                   Add new
                 </Button>

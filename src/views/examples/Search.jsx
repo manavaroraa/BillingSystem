@@ -38,7 +38,7 @@ function Search() {
           .filter((post) => {
             if (query === "") {
               return post;
-            } else if (post.email.toLowerCase().includes(query.toLowerCase())) {
+            } else if (post.ClientEmail.toLowerCase().includes(query.toLowerCase())) {
               return post;
             }
           })
@@ -51,13 +51,15 @@ function Search() {
                 <th>Client Type</th>
                 <th>Invoice Link</th>
                 <th>Date</th>
+                <th>Status</th>
               </tr>
               <tr>
-                <td>{post.email}</td>
+                <td>{post.ClientEmail}</td>
                 <td>{post.Amount}</td>
                 <td>{post.ClientType}</td>
                 <td>{post.InvoiceLink}</td>
                 <td>{post.date}</td>
+                <td>{post.status}</td>
                
               </tr>
               </tbody>
